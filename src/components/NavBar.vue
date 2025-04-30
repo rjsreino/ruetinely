@@ -1,6 +1,7 @@
 <script setup>
 import logo from '@/assets/img/logo-oscar.png'
 import { RouterLink, useRoute } from 'vue-router'
+import NavBarItem from './NavBarItem.vue'
 const isActiveLink = (routePath) => {
   const route = useRoute()
   return route.path === routePath
@@ -8,9 +9,9 @@ const isActiveLink = (routePath) => {
 </script>
 <template>
   <nav
-    class="fixed bottom-8 left-0 right-0 z-50 bg-gradient-to-r from-cyan-500 to-blue-500 drop-shadow-lg rounded-2xl mx-auto max-w-max"
+    class="fixed bottom-8 left-0 right-0 z-50 bg-gradient-to-r from-gray-300 to-slate-500 drop-shadow-lg rounded-3xl mx-auto max-w-max"
   >
-    <div class="mx-auto px-8">
+    <div class="mx-auto px-8 py-2">
       <div class="flex h-20 items-center justify-between">
         <!--sm:items-stretch sm:justify-start-->
         <div class="flex items-center justify-center">
@@ -24,41 +25,36 @@ const isActiveLink = (routePath) => {
               <RouterLink
                 to="/"
                 :class="[
-                  isActiveLink('/') ? 'bg-stone-900/50' : 'hover:bg-stone-900/75 hover:text-white',
-                  'transition delay-50 duration-300 ease-in-out text-white px-3 py-2 rounded-md',
+                  isActiveLink('/')
+                    ? 'text-black drop-shadow-4xl scale-125'
+                    : 'hover:drop-shadow-2xl text-white drop-shadow-3xl',
+                  'transition delay-50 duration-300 ease-in-out px-3 py-2',
                 ]"
               >
-                Here
-              </RouterLink>
-              <RouterLink
-                to="/"
-                :class="[
-                  isActiveLink('/') ? 'bg-stone-900/50' : 'hover:bg-stone-900/75 hover:text-white',
-                  'transition delay-50 duration-300 ease-in-out text-white px-3 py-2 rounded-md',
-                ]"
-              >
-                Home
+                <NavBarItem primeIcon="home" text="Home" />
               </RouterLink>
               <RouterLink
                 to="/jobs"
                 :class="[
                   isActiveLink('/jobs')
-                    ? 'bg-stone-900/50'
-                    : 'hover:bg-stone-900/75 hover:text-white',
-                  'transition delay-50 duration-300 ease-in-out text-white px-3 py-2 rounded-md',
+                    ? 'text-black drop-shadow-4xl scale-125'
+                    : 'hover:drop-shadow-2xl text-white drop-shadow-3xl',
+                  'transition delay-50 duration-300 ease-in-out px-3 py-2',
                 ]"
-                >Tasks</RouterLink
               >
+                <NavBarItem primeIcon="list-check" text="Tasks" />
+              </RouterLink>
               <RouterLink
                 to="/jobs/add"
                 :class="[
                   isActiveLink('/jobs/add')
-                    ? 'bg-stone-900/50'
-                    : 'hover:bg-stone-900/75 hover:text-white',
-                  'transition delay-50 duration-300 ease-in-out text-white px-3 py-2 rounded-md',
+                    ? 'text-black drop-shadow-4xl scale-125'
+                    : 'hover:drop-shadow-2xl text-white drop-shadow-3xl',
+                  'transition delay-50 duration-300 ease-in-out px-3 py-2',
                 ]"
-                >Account</RouterLink
               >
+                <NavBarItem primeIcon="user" text="User" />
+              </RouterLink>
             </div>
           </div>
         </div>
