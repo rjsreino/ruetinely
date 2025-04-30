@@ -8,41 +8,46 @@ const isActiveLink = (routePath) => {
 </script>
 <template>
   <nav
-    class="fixed bottom-0 left-0 right-0 z-50 bg-green-700 border-b border-green-500 shadow-md rounded-2xl"
+    class="fixed bottom-8 left-0 right-0 z-50 bg-gradient-to-r from-cyan-500 to-blue-500 drop-shadow-lg rounded-2xl mx-auto max-w-max"
   >
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div class="mx-auto px-8">
       <div class="flex h-20 items-center justify-between">
-        <div class="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
-          <!-- Logo -->
+        <!--sm:items-stretch sm:justify-start-->
+        <div class="flex items-center justify-center">
+          <!-- Logo 
           <RouterLink class="flex flex-shrink-0 items-center mr-4" to="/">
             <img class="h-10 w-auto" :src="logo" alt="Vue Jobs" />
-            <span class="hidden md:block text-white text-2xl font-bold ml-2">Vue Jobs</span>
           </RouterLink>
-          <div class="md:ml-auto">
+        -->
+          <div class="sm:ml-auto">
             <div class="flex space-x-2">
               <RouterLink
                 to="/"
                 :class="[
-                  isActiveLink('/') ? 'bg-green-900' : 'hover:bg-gray-900 hover:text-white',
-                  'text-white px-3 py-2 rounded-md',
+                  isActiveLink('/') ? 'bg-stone-900/50' : 'hover:bg-stone-900/75 hover:text-white',
+                  'transition delay-50 duration-300 ease-in-out text-white px-3 py-2 rounded-md',
                 ]"
                 >Home</RouterLink
               >
               <RouterLink
                 to="/jobs"
                 :class="[
-                  isActiveLink('/jobs') ? 'bg-green-900' : 'hover:bg-gray-900 hover:text-white',
-                  'text-white px-3 py-2 rounded-md',
+                  isActiveLink('/jobs')
+                    ? 'bg-stone-900/50'
+                    : 'hover:bg-stone-900/75 hover:text-white',
+                  'transition delay-50 duration-300 ease-in-out text-white px-3 py-2 rounded-md',
                 ]"
-                >Jobs</RouterLink
+                >Tasks</RouterLink
               >
               <RouterLink
                 to="/jobs/add"
                 :class="[
-                  isActiveLink('/jobs/add') ? 'bg-green-900' : 'hover:bg-gray-900 hover:text-white',
-                  'text-white px-3 py-2 rounded-md',
+                  isActiveLink('/jobs/add')
+                    ? 'bg-stone-900/50'
+                    : 'hover:bg-stone-900/75 hover:text-white',
+                  'transition delay-50 duration-300 ease-in-out text-white px-3 py-2 rounded-md',
                 ]"
-                >Add Job</RouterLink
+                >Account</RouterLink
               >
             </div>
           </div>
