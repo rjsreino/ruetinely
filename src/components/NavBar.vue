@@ -27,8 +27,18 @@ const isActiveLink = (routePath) => {
                   isActiveLink('/') ? 'bg-stone-900/50' : 'hover:bg-stone-900/75 hover:text-white',
                   'transition delay-50 duration-300 ease-in-out text-white px-3 py-2 rounded-md',
                 ]"
-                >Home</RouterLink
               >
+                Here
+              </RouterLink>
+              <RouterLink
+                to="/"
+                :class="[
+                  isActiveLink('/') ? 'bg-stone-900/50' : 'hover:bg-stone-900/75 hover:text-white',
+                  'transition delay-50 duration-300 ease-in-out text-white px-3 py-2 rounded-md',
+                ]"
+              >
+                Home
+              </RouterLink>
               <RouterLink
                 to="/jobs"
                 :class="[
