@@ -4,8 +4,8 @@ import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
-  <div>
+  <main class="pt-20">
     <h1 class="text-3xl text-red-500 font-bold underline">Hello world!</h1>
     <NavBar />
-  </div>
+  </main>
 </template>
