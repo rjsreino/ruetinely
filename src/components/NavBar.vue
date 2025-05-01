@@ -11,7 +11,7 @@ const isActiveLink = (routePath) => {
   <nav
     class="fixed bottom-8 left-0 right-0 z-50 bg-gradient-to-r from-gray-300 to-slate-500 drop-shadow-lg rounded-3xl mx-auto max-w-max"
   >
-    <div class="mx-auto px-8 py-2">
+    <div class="mx-auto px-6 py-1">
       <div class="flex h-20 items-center justify-between">
         <!--sm:items-stretch sm:justify-start-->
         <div class="flex items-center justify-center">
