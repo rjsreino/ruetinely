@@ -7,7 +7,7 @@ defineProps({
 })
 </script>
 <template>
-  <div class="w-full p-4 bg-gray-100 rounded-lg shadow-lg sm:max-w-2xl md:max-w-2xl lg:max-w-2xl">
+  <div class="w-96 p-4 bg-gray-100 rounded-lg shadow-lg sm:max-w-2xl md:max-w-2xl lg:max-w-2xl">
     <div class="flex items-center justify-between w-full">
       <!--left side-->
       <div>
