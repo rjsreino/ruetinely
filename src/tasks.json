@@ -1,0 +1,46 @@
+{
+  "tasks": [
+    {
+      "title": "Gym",
+      "priority": "high",
+      "repeat": {
+        "mon": "10.00",
+        "tue": "10.00",
+        "wed": "10.00",
+        "thu": "10.00",
+        "fri": "10.00",
+        "sat": "10.00",
+        "sun": "10.00"
+      },
+      "id": "1"
+    },
+    {
+      "title": "Code",
+      "priority": "medium",
+      "repeat": {
+        "mon": "11.00",
+        "tue": "11.00",
+        "wed": "11.00",
+        "thu": "11.00",
+        "fri": "11.00",
+        "sat": "11.00",
+        "sun": "11.00"
+      },
+      "id": "2"
+    },
+    {
+      "title": "Brew Coffee",
+      "priority": "urgent",
+      "repeat": {
+        "mon": "08.00",
+        "tue": "08.00",
+        "wed": "08.00",
+        "thu": "08.00",
+        "fri": "08.00",
+        "sat": "08.00",
+        "sun": "08.00"
+      },
+      "id": "3"
+    }
+  ]
+}
