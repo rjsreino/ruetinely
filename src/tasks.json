@@ -2,127 +2,64 @@
   {
     "title": "Gym",
     "priority": "high",
-    "repeat": {
-      "mon": "10.00",
-      "tue": "10.00",
-      "wed": "10.00",
-      "thu": "10.00",
-      "fri": "10.00",
-      "sat": "10.00",
-      "sun": "10.00"
-    },
+    "repeat": ["mon", "tue", "thu", "fri"],
+    "time": "06.00",
     "id": "1"
   },
   {
     "title": "Code",
     "priority": "medium",
-    "repeat": {
-      "mon": "11.00",
-      "tue": "11.00",
-      "wed": "11.00",
-      "thu": "11.00",
-      "fri": "11.00",
-      "sat": "11.00",
-      "sun": "11.00"
-    },
+    "repeat": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    "time": "11.00",
     "id": "2"
   },
   {
     "title": "Brew Coffee",
     "priority": "urgent",
-    "repeat": {
-      "mon": "08.00",
-      "tue": "08.00",
-      "wed": "08.00",
-      "thu": "08.00",
-      "fri": "08.00",
-      "sat": "08.00",
-      "sun": "08.00"
-    },
+    "repeat": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    "time": "08.00",
     "id": "3"
   },
   {
     "title": "Read a book",
     "priority": "medium",
-    "repeat": {
-      "mon": "20.00",
-      "tue": "20.00",
-      "wed": "20.00",
-      "thu": "20.00",
-      "fri": "20.00",
-      "sat": "20.00",
-      "sun": "20.00"
-    },
+    "repeat": ["wed", "sat", "sun"],
+    "time": "22.00",
     "id": "4"
   },
   {
     "title": "Meditation",
     "priority": "high",
-    "repeat": {
-      "mon": "07.30",
-      "tue": "07.30",
-      "wed": "07.30",
-      "thu": "07.30",
-      "fri": "07.30",
-      "sat": "07.30",
-      "sun": "07.30"
-    },
+    "repeat": ["sun"],
+    "time": "05.45",
     "id": "5"
   },
   {
     "title": "Check Emails",
     "priority": "low",
-    "repeat": {
-      "mon": "09.00",
-      "tue": "09.00",
-      "wed": "09.00",
-      "thu": "09.00",
-      "fri": "09.00",
-      "sat": "09.00",
-      "sun": "09.00"
-    },
+    "repeat": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    "time": "10.00",
     "id": "6"
   },
   {
     "title": "Walk the Dog",
     "priority": "high",
-    "repeat": {
-      "mon": "18.00",
-      "tue": "18.00",
-      "wed": "18.00",
-      "thu": "18.00",
-      "fri": "18.00",
-      "sat": "18.00",
-      "sun": "18.00"
-    },
+    "repeat": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    "time": "13.00",
     "id": "7"
   },
   {
     "title": "Grocery Shopping",
     "priority": "medium",
-    "repeat": {
-      "mon": "16.00",
-      "tue": "16.00",
-      "wed": "16.00",
-      "thu": "16.00",
-      "fri": "16.00",
-      "sat": "16.00",
-      "sun": "16.00"
-    },
+    "repeat": ["tue", "sat"],
+    "time": "15.00",
     "id": "8"
   },
   {
     "title": "Call Family",
-    "priority": "urgent",
-    "repeat": {
-      "mon": "19.30",
-      "tue": "19.30",
-      "wed": "19.30",
-      "thu": "19.30",
-      "fri": "19.30",
-      "sat": "19.30",
-      "sun": "19.30"
-    },
+    "priority": "medium",
+    "repeat": ["tue", "thu", "sat"],
+    "time": "19.00",
     "id": "9"
   }
 ]

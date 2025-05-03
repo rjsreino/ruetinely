@@ -28,6 +28,18 @@ export const useTaskStore = defineStore('tasks', {
         task.title = title
       }
     },
+    updateTaskRepeat(taskId, repeat) {
+      const task = this.tasks.find((t) => t.id === taskId)
+      if (task) {
+        task.repeat = repeat
+      }
+    },
+    updateTaskTime(taskId, time) {
+      const task = this.tasks.find((t) => t.id === taskId)
+      if (task) {
+        task.time = time
+      }
+    },
     deleteTask(taskId) {
       this.tasks = this.tasks.filter((t) => t.id !== taskId)
     },

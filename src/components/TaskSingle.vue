@@ -19,13 +19,15 @@ const toggleCompleted = () => {
   >
     <div class="flex items-center justify-between w-full">
       <!--left side-->
-      <div>
-        <label :class="['font-bold', { 'line-through': task.completed }]">
-          {{ task.title }}
-        </label>
+      <label :class="['font-bold mr-3', { 'line-through': task.completed }]">
+        {{ task.title }}
+      </label>
+      <div class="font-light italic mr-3">
+        <i class="pi pi-clock"></i>
+        {{ task.time }}
       </div>
       <!--priority status mini card-->
-      <div class="ml-4 px-3 py-2 bg-white rounded-full border-1 border-black text-sm">
+      <div class="px-3 py-2 bg-white rounded-full border-1 border-black text-sm">
         <i class="pi pi-flag"></i>
         {{ task.priority }}
       </div>

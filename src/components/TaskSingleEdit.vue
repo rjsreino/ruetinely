@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import { useTaskStore } from '@/stores/taskStore'
-import CheckBox from './CheckBox.vue'
+import DayPick from './DayPick.vue'
 
 import { ref } from 'vue'
 
@@ -11,26 +11,33 @@ const props = defineProps({
 
 const taskStore = useTaskStore()
 
-// State for editing
+// state for editing
 const isEditing = ref(false)
 const editedTitle = ref(props.task.title)
 const editedPriority = ref(props.task.priority)
+const editedRepeat = ref(props.task.repeat)
+const editedTime = ref(props.task.time)
 
 const priorityOptions = ['no priority', 'low', 'medium', 'high', 'urgent']
+const dayOptions = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
-// For drag visualization
+// drag visualization
 const isDraggedOver = ref(false)
 
 const startEditing = () => {
   isEditing.value = true
   editedTitle.value = props.task.title
   editedPriority.value = props.task.priority
+  editedRepeat.value = props.task.repeat
+  editedTime.value = props.task.time
 }
 
 const saveChanges = () => {
   if (editedTitle.value.trim()) {
     taskStore.updateTaskTitle(props.task.id, editedTitle.value)
     taskStore.updateTaskPriority(props.task.id, editedPriority.value)
+    taskStore.updateTaskRepeat(props.task.id, editedRepeat.value)
+    taskStore.updateTaskTime(props.task.id, editedTime.value)
   }
   isEditing.value = false
 }
@@ -58,48 +65,40 @@ const handleDragLeave = () => {
       isDraggedOver
         ? 'bg-slate-400 border-2 border-slate-600'
         : 'bg-gradient-to-l from-slate-300 to-gray-200',
-      { 'opacity-60': task.completed },
     ]"
     @dragover="handleDragOver"
     @dragleave="handleDragLeave"
     @dragend="isDraggedOver = false"
     @drop="isDraggedOver = false"
   >
-    <!-- Normal View -->
-    <div v-if="!isEditing" class="flex items-center justify-between w-full">
-      <div class="flex items-center">
-        <div class="cursor-move mr-2 text-gray-500">
-          <i class="pi pi-bars"></i>
-        </div>
-        <div>
-          <label :class="['font-bold', { 'line-through': task.completed }]">
+    <!-- two flex boxes on top of each other -->
+    <div v-if="!isEditing">
+      <div class="flex items-center justify-between w-full">
+        <div class="flex items-center">
+          <i class="pi pi-bars cursor-move mr-3 text-gray-500"></i>
+          <label class="font-bold mr-3">
             {{ task.title }}
           </label>
+          <div class="px-3 py-2 bg-white rounded-full border-1 border-black text-sm">
+            <i class="pi pi-flag"></i>
+            {{ task.priority }}
+          </div>
+        </div>
+
+        <div class="flex items-center">
+          <div class="flex ml-4">
+            <button @click="startEditing" class="p-2 text-slate-700 hover:text-slate-900">
+              <i class="pi pi-pencil"></i>
+            </button>
+
+            <button @click="deleteTask" class="p-2 text-red-600 hover:text-red-700">
+              <i class="pi pi-trash"></i>
+            </button>
+          </div>
         </div>
       </div>
-
-      <div class="flex items-center">
-        <div class="ml-4 px-3 py-2 bg-white rounded-full border-1 border-black text-sm">
-          <i class="pi pi-flag"></i>
-          {{ task.priority }}
-        </div>
-
-        <div class="flex ml-4">
-          <button @click="startEditing" class="p-2 text-slate-700 hover:text-slate-900">
-            <i class="pi pi-pencil"></i>
-          </button>
-
-          <button @click="deleteTask" class="p-2 text-red-600 hover:text-red-700">
-            <i class="pi pi-trash"></i>
-          </button>
-
-          <CheckBox
-            class="ml-2"
-            :modelValue="task.completed"
-            @update:modelValue="toggleCompleted"
-          />
-        </div>
-      </div>
+      <!--repeat details-->
+      <div class="mt-2 font-light italic">Repeats every mon @ 10.00</div>
     </div>
 
     <!-- Edit View -->
@@ -107,6 +106,19 @@ const handleDragLeave = () => {
       <input
         v-model="editedTitle"
         type="text"
+        class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
+        @keyup.enter="saveChanges"
+      />
+      <input
+        v-model="editedRepeat"
+        type="text"
+        class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
+        @keyup.enter="saveChanges"
+      />
+      <DayPick />
+      <input
+        v-model="editedTime"
+        type="time"
         class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
         @keyup.enter="saveChanges"
       />
