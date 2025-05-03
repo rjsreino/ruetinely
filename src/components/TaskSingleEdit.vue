@@ -15,11 +15,12 @@ const taskStore = useTaskStore()
 const isEditing = ref(false)
 const editedTitle = ref(props.task.title)
 const editedPriority = ref(props.task.priority)
-const editedRepeat = ref(props.task.repeat)
+const editedRepeat = ref(
+  Array.isArray(props.task.repeat) ? [...props.task.repeat] : [props.task.repeat],
+)
 const editedTime = ref(props.task.time)
 
 const priorityOptions = ['no priority', 'low', 'medium', 'high', 'urgent']
-const dayOptions = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
 // drag visualization
 const isDraggedOver = ref(false)
@@ -98,7 +99,9 @@ const handleDragLeave = () => {
         </div>
       </div>
       <!--repeat details-->
-      <div class="mt-2 font-light italic">Repeats every mon @ 10.00</div>
+      <div class="mt-2 font-light italic">
+        Repeats every {{ task.repeat.join(', ') }} @ {{ task.time }}
+      </div>
     </div>
 
     <!-- Edit View -->
@@ -115,7 +118,7 @@ const handleDragLeave = () => {
         class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
         @keyup.enter="saveChanges"
       />
-      <DayPick />
+      <DayPick v-model="editedRepeat" />
       <input
         v-model="editedTime"
         type="time"
