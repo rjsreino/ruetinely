@@ -3,8 +3,7 @@
     <label class="flex items-center cursor-pointer relative">
       <input
         type="checkbox"
-        checked
-        class="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800"
+        class="peer h-7 w-7 cursor-pointer transition-all appearance-none rounded-md shadow hover:shadow-md border border-slate-500 checked:bg-slate-800 checked:border-slate-800"
         id="check"
       />
       <span

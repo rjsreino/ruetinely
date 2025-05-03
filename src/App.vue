@@ -6,7 +6,7 @@ import { RouterView } from 'vue-router'
 
 <template>
   <main class="">
-    <div class="w-full mx-auto md:max-w-3xl lg:max-w-3xl">
+    <div class="w-full mx-auto md:max-w-3xl lg:max-w-3xl bg-gradient-to-t from-white to-slate-100">
       <header class="flex flex-col items-center py-8">
         <!--div class="bg-green-200 w-2/4 text-center"-->
         <h1

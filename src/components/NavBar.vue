@@ -34,9 +34,9 @@ const isActiveLink = (routePath) => {
                 <NavBarItem primeIcon="home" text="Home" />
               </RouterLink>
               <RouterLink
-                to="/jobs"
+                to="/tasks"
                 :class="[
-                  isActiveLink('/jobs')
+                  isActiveLink('/tasks')
                     ? 'text-black drop-shadow-4xl scale-125'
                     : 'hover:drop-shadow-2xl text-white drop-shadow-3xl',
                   'transition delay-50 duration-300 ease-in-out px-3 py-2',

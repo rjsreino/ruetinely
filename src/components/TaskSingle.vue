@@ -20,7 +20,7 @@ defineProps({
         <i class="pi pi-flag"></i>
         {{ task.priority }}
       </div>
-      <CheckBox class="ml-auto" />
+      <CheckBox class="ml-auto pr-1" />
     </div>
   </div>
 </template>
