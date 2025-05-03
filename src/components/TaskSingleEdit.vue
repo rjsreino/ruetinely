@@ -75,12 +75,14 @@ const handleDragLeave = () => {
     <!-- two flex boxes on top of each other -->
     <div v-if="!isEditing">
       <div class="flex items-center justify-between w-full">
-        <div class="flex items-center">
+        <div class="flex items-center min-w-0">
           <i class="pi pi-bars cursor-move mr-3 text-gray-500"></i>
-          <label class="font-bold mr-3">
+          <label
+            class="font-bold mr-3 truncate whitespace-nowrap overflow-hidden max-w-[12rem] sm:max-w-[16rem] md:max-w-[20rem]"
+          >
             {{ task.title }}
           </label>
-          <div class="px-3 py-2 bg-white rounded-full border-1 border-black text-sm">
+          <div class="px-3 py-2 bg-white rounded-full border-1 border-black text-sm flex-shrink-0">
             <i class="pi pi-flag"></i>
             {{ task.priority }}
           </div>
@@ -109,8 +111,11 @@ const handleDragLeave = () => {
       <input
         v-model="editedTitle"
         type="text"
+        minlength="1"
+        maxlength="20"
         class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
         @keyup.enter="saveChanges"
+        required
       />
       <input
         v-model="editedRepeat"

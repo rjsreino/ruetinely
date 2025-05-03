@@ -19,15 +19,20 @@ const toggleCompleted = () => {
   >
     <div class="flex items-center justify-between w-full">
       <!--left side-->
-      <label :class="['font-bold mr-3', { 'line-through': task.completed }]">
+      <label
+        :class="[
+          'font-bold mr-3 truncate whitespace-nowrap overflow-hidden max-w-[12rem] sm:max-w-[16rem] md:max-w-[20rem]',
+          { 'line-through': task.completed },
+        ]"
+      >
         {{ task.title }}
       </label>
-      <div class="font-light italic mr-3">
-        <i class="pi pi-clock"></i>
+      <div class="flex items-center text-sm font-light text-slate-800 mr-3 flex-shrink-0">
+        <i class="pi pi-clock mr-1"></i>
         {{ task.time }}
       </div>
       <!--priority status mini card-->
-      <div class="px-3 py-2 bg-white rounded-full border-1 border-black text-sm">
+      <div class="mr-2 px-3 py-2 bg-white rounded-full border-1 border-black text-sm flex-shrink-0">
         <i class="pi pi-flag"></i>
         {{ task.priority }}
       </div>
