@@ -12,6 +12,7 @@ import TaskListEdit from '@/components/TaskListEdit.vue'
       </h1>
     </header>
     <TaskListEdit />
+    <div class="h-32"></div>
   </div>
   <RouterView />
 </template>

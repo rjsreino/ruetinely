@@ -1,10 +1,11 @@
 <script setup>
 import TaskSingle from './TaskSingle.vue'
-import taskData from '@/tasks.json'
+import { useTaskStore } from '@/stores/taskStore'
 
-import { ref } from 'vue'
+import { computed } from 'vue'
 
-const tasks = ref(taskData)
+const taskStore = useTaskStore()
+const tasks = computed(() => taskStore.tasks)
 </script>
 <template>
   <section class="py-8">

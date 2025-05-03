@@ -1,8 +1,26 @@
+<script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const isChecked = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value),
+})
+</script>
 <template>
   <div class="inline-flex items-center">
     <label class="flex items-center cursor-pointer relative">
       <input
         type="checkbox"
+        v-model="isChecked"
         class="peer h-7 w-7 cursor-pointer transition-all appearance-none rounded-md shadow hover:shadow-md border border-slate-500 checked:bg-slate-800 checked:border-slate-800"
         id="check"
       />

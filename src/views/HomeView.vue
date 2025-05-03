@@ -15,6 +15,7 @@ import TaskList from '@/components/TaskList.vue'
       <img src="@/assets/img/oscar.avif" class="h-96 w-96 object-contain" />
     </section>
     <TaskList />
+    <div class="h-32"></div>
   </div>
   <RouterView />
 </template>
