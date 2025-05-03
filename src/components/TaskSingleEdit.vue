@@ -127,6 +127,7 @@ const handleDragLeave = () => {
       <input
         v-model="editedTime"
         type="time"
+        value="{{task.time}}"
         class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
         @keyup.enter="saveChanges"
       />
