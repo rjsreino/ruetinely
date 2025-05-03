@@ -32,7 +32,7 @@ const toggleCompleted = () => {
         {{ task.time }}
       </div>
       <!--priority status mini card-->
-      <div class="mr-2 px-3 py-2 bg-white rounded-full border-1 border-black text-sm flex-shrink-0">
+      <div class="mr-3 px-3 py-2 bg-white rounded-full border-1 border-black text-sm flex-shrink-0">
         <i class="pi pi-flag"></i>
         {{ task.priority }}
       </div>

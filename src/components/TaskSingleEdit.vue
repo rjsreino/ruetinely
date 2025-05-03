@@ -112,7 +112,7 @@ const handleDragLeave = () => {
         v-model="editedTitle"
         type="text"
         minlength="1"
-        maxlength="20"
+        maxlength="32"
         class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
         @keyup.enter="saveChanges"
         required

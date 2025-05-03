@@ -56,7 +56,7 @@ const addNewTask = () => {
 }
 </script>
 <template>
-  <section class="py-8">
+  <section class="pb-8">
     <div class="flex justify-center container-xl">
       <div class="grid grid-cols-1 gap-6">
         <h2 class="font-bold text-2xl">Tasks:</h2>
