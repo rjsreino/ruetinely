@@ -49,7 +49,7 @@ function toggleDay(dayValue) {
           @change="toggleDay(day.value)"
         />
         <span
-          class="absolute text-xs font-semibold left-2 top-1.5 pointer-events-none select-none text-slate-700 peer-checked:text-white"
+          class="flex items-center justify-center absolute inset-0 text-sm font-semibold pointer-events-none select-none text-slate-700 peer-checked:text-white"
         >
           {{ day.label }}
         </span>
