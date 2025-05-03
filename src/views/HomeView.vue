@@ -1,5 +1,5 @@
 <script setup>
-import TaskListEdit from '@/components/TaskListEdit.vue'
+import TaskList from '@/components/TaskList.vue'
 </script>
 <template>
   <div class="w-full mx-auto md:max-w-3xl lg:max-w-3xl bg-gradient-to-t from-white to-slate-100">
@@ -11,7 +11,10 @@ import TaskListEdit from '@/components/TaskListEdit.vue'
         Ruetinely
       </h1>
     </header>
-    <TaskListEdit />
+    <section class="flex flex-col items-center">
+      <img src="@/assets/img/oscar.avif" class="h-96 w-96 object-contain" />
+    </section>
+    <TaskList />
   </div>
   <RouterView />
 </template>

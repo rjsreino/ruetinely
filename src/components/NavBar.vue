@@ -1,5 +1,4 @@
 <script setup>
-import logo from '@/assets/img/logo-oscar.png'
 import { RouterLink, useRoute } from 'vue-router'
 import NavBarItem from './NavBarItem.vue'
 const isActiveLink = (routePath) => {
