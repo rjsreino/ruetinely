@@ -11,6 +11,17 @@ const props = defineProps({
 
 const taskStore = useTaskStore()
 
+const getPriorityClasses = (priority) => {
+  const map = {
+    'no priority': 'border-gray-300 text-gray-500',
+    low: 'border-green-400 text-green-500',
+    medium: 'border-yellow-400 text-yellow-500',
+    high: 'border-orange-400 text-orange-500 font-semibold',
+    urgent: 'border-red-400 text-red-500 font-bold',
+  }
+  return map[priority?.toLowerCase()] || 'border-gray-400 text-gray-600'
+}
+
 // state for editing
 const isEditing = ref(false)
 const editedTitle = ref(props.task.title)
@@ -82,8 +93,11 @@ const handleDragLeave = () => {
           >
             {{ task.title }}
           </label>
-          <div class="px-3 py-2 bg-white rounded-full border-1 border-black text-sm flex-shrink-0">
-            <i class="pi pi-flag"></i>
+          <div
+            class="px-3 py-2 bg-white rounded-full border-2 text-sm flex-shrink-0"
+            :class="getPriorityClasses(task.priority)"
+          >
+            <i class="pi pi-flag" :class="getPriorityClasses(task.priority)"></i>
             {{ task.priority }}
           </div>
         </div>
@@ -113,14 +127,14 @@ const handleDragLeave = () => {
         type="text"
         minlength="1"
         maxlength="32"
-        class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
+        class="w-full p-2 border border-slate-400 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
         @keyup.enter="saveChanges"
         required
       />
       <input
         v-model="editedRepeat"
         type="text"
-        class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
+        class="w-full p-2 border border-slate-400 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
         @keyup.enter="saveChanges"
       />
       <DayPick v-model="editedRepeat" />
@@ -128,14 +142,15 @@ const handleDragLeave = () => {
         v-model="editedTime"
         type="time"
         value="{{task.time}}"
-        class="w-full p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
+        class="w-full p-2 border border-slate-400 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
         @keyup.enter="saveChanges"
       />
 
       <div class="flex justify-between">
         <select
           v-model="editedPriority"
-          class="p-2 border border-slate-400 rounded shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
+          class="p-2 border-2 rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-slate-500"
+          :class="getPriorityClasses(task.priority)"
         >
           <option v-for="option in priorityOptions" :key="option" :value="option">
             {{ option }}
@@ -145,7 +160,7 @@ const handleDragLeave = () => {
         <div>
           <button
             @click="isEditing = false"
-            class="px-4 py-2 bg-gray-300 text-gray-700 rounded mr-2 hover:bg-gray-400 shadow"
+            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg mr-2 hover:bg-gray-400 shadow"
           >
             Cancel
           </button>
