@@ -11,7 +11,55 @@ console.log(datetime.getDay())
 const taskStore = useTaskStore()
 const allTasks = computed(() => taskStore.tasks)
 
-const selectedDay = ref('all') // default to show all tasks
+const selectedDay = ref('mon')
+
+const priorityMap = {
+  'no priority': 0,
+  low: 1,
+  medium: 2,
+  high: 3,
+  urgent: 4,
+}
+
+const completedPrioritySum = computed(() => {
+  return allTasks.value
+    .filter((task) => task.completed)
+    .filter((task) => task.repeat && task.repeat.includes(selectedDay.value))
+    .reduce((sum, task) => {
+      const priority = priorityMap[task.priority?.toLowerCase()] ?? 0
+      return sum + priority
+    }, 0)
+})
+
+const dailyPrioritySums = computed(() => {
+  const sums = {
+    mon: 0,
+    tue: 0,
+    wed: 0,
+    thu: 0,
+    fri: 0,
+    sat: 0,
+    sun: 0,
+  }
+
+  allTasks.value.forEach((task) => {
+    const priority = priorityMap[task.priority?.toLowerCase()] ?? 0
+    if (task.repeat && Array.isArray(task.repeat)) {
+      task.repeat.forEach((day) => {
+        if (sums.hasOwnProperty(day)) {
+          sums[day] += priority
+        }
+      })
+    }
+  })
+
+  return sums
+})
+
+const calendarPriorityDisplayValue = computed(() => {
+  const total = dailyPrioritySums.value[selectedDay.value] || 0
+  return total === 0 ? 0 : (completedPrioritySum.value / total).toFixed(2)
+})
 
 const dayMap = {
   0: 'sun',
@@ -23,21 +71,14 @@ const dayMap = {
   6: 'sat',
 }
 
-const today = dayMap[new Date().getDay()]
-
-selectedDay.value = today
+selectedDay.value = dayMap[new Date().getDay()]
 
 // filter tasks based on selected day
 const tasks = computed(() => {
-  if (selectedDay.value === 'all') {
-    return allTasks.value
-  } else {
-    return allTasks.value.filter((task) => task.repeat && task.repeat.includes(selectedDay.value))
-  }
+  return allTasks.value.filter((task) => task.repeat && task.repeat.includes(selectedDay.value))
 })
 
 const days = [
-  { value: 'all', label: 'All' },
   { value: 'mon', label: 'Monday' },
   { value: 'tue', label: 'Tuesday' },
   { value: 'wed', label: 'Wednesday' },
@@ -51,9 +92,16 @@ const days = [
   <section class="py-8">
     <div class="flex justify-center container-xl">
       <div class="grid grid-cols-1 gap-6">
+        <p class="text-lg font-semibold">
+          Total priority value of completed tasks: {{ completedPrioritySum }}
+        </p>
+        <p class="text-lg font-semibold">
+          Available priority on {{ selectedDay }}: {{ dailyPrioritySums[selectedDay] ?? 0 }}
+        </p>
+        <p class="text-lg font-semibold">Ratio: {{ calendarPriorityDisplayValue }}</p>
         <h2 class="font-bold text-2xl">Tasks:</h2>
         <!-- Day of week tabs alternative UI -->
-        <div class="flex justify-between bg-gray-100 rounded-lg p-1">
+        <div class="flex justify-between bg-gray-100 rounded-lg p-1 shadow-md">
           <button
             v-for="day in days"
             :key="day.value"
@@ -65,7 +113,7 @@ const days = [
                 : 'text-gray-700 hover:bg-gray-200',
             ]"
           >
-            {{ day.value === 'all' ? 'All' : day.label.slice(0, 3) }}
+            {{ day.label.slice(0, 3) }}
           </button>
         </div>
         <div v-if="!tasks.length"><TaskPlaceholder /></div>

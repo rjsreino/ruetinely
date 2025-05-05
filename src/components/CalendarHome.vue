@@ -1,5 +1,18 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+
+const view = ref('weekly')
+const focusedDate = ref(new Date())
+const calendarKey = ref(0)
+
+watch(view, (newView) => {
+  if (newView === 'weekly') {
+    // Reset to today when switching to weekly
+    focusedDate.value = new Date()
+    calendarKey.value++
+  }
+})
+
 const attributes = ref([
   {
     highlight: {
@@ -69,6 +82,10 @@ document.documentElement.style.setProperty('--number', colorValue.value)
 }
 </style>
 <template>
+  <select v-model="view" class="p-1.5 border-2 rounded-lg shadow-inner focus:outline-none">
+    <option value="weekly">Weekly</option>
+    <option value="monthly">Monthly</option>
+  </select>
   <div class="likert-scale">
     <button
       v-for="n in 10"
@@ -81,5 +98,11 @@ document.documentElement.style.setProperty('--number', colorValue.value)
     </button>
   </div>
   <p>Current opacity: {{ getHexOpacity(likertValue) }} (hex)</p>
-  <VCalendar expanded view="weekly" :attributes="attributes" />
+  <VCalendar
+    expanded
+    :key="calendarKey"
+    :view="view"
+    :focused-date="focusedDate"
+    :attributes="attributes"
+  />
 </template>
