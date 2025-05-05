@@ -13,7 +13,7 @@ import CalendarHome from '@/components/CalendarHome.vue'
       </h1>
     </header>
     <section class="flex flex-col items-center">
-      <div class="w-96 flex flex-col items-center">
+      <div class="w-96">
         <CalendarHome />
       </div>
     </section>

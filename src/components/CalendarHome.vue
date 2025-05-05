@@ -17,6 +17,14 @@ const attributes = ref([
       },
     ],
   },
+  {
+    highlight: {
+      color: 'red',
+      fillMode: 'custom',
+      class: 'my-current-day-highlight',
+    },
+    dates: new Date(),
+  },
 ])
 const likertValue = ref(4)
 const getHexOpacity = (value) => {
@@ -52,6 +60,11 @@ document.documentElement.style.setProperty('--number', colorValue.value)
 /* Custom highlight style with precise opacity control */
 .my-custom-highlight {
   background-color: var(--number) !important;
+  border-radius: 5px;
+}
+.my-current-day-highlight {
+  border: 2px solid #0059ff !important;
+
   border-radius: 5px;
 }
 </style>
