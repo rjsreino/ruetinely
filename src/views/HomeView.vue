@@ -1,5 +1,6 @@
 <script setup>
 import TaskList from '@/components/TaskList.vue'
+import CalendarHome from '@/components/CalendarHome.vue'
 </script>
 <template>
   <div class="w-full mx-auto md:max-w-3xl lg:max-w-3xl bg-gradient-to-t from-white to-slate-100">
@@ -12,7 +13,9 @@ import TaskList from '@/components/TaskList.vue'
       </h1>
     </header>
     <section class="flex flex-col items-center">
-      <img src="@/assets/img/oscar.avif" class="h-96 w-96 object-contain" />
+      <div class="w-96 flex flex-col items-center">
+        <CalendarHome />
+      </div>
     </section>
     <TaskList />
     <div class="h-32"></div>

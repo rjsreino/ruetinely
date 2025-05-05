@@ -17,12 +17,13 @@ const isChecked = computed({
 </script>
 <template>
   <div class="inline-flex items-center">
-    <label class="flex items-center cursor-pointer relative">
+    <label for="checkbox" class="flex items-center cursor-pointer relative">
       <input
         type="checkbox"
+        name="checkbox"
+        id="checkbox"
         v-model="isChecked"
         class="peer h-7 w-7 cursor-pointer transition-all appearance-none rounded-md shadow hover:shadow-md border border-slate-500 checked:bg-slate-800 checked:border-slate-800"
-        id="check"
       />
       <span
         class="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
