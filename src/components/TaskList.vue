@@ -11,7 +11,7 @@ console.log(datetime.getDay())
 const taskStore = useTaskStore()
 const allTasks = computed(() => taskStore.tasks)
 
-const selectedDay = ref('all') // Default to show all tasks
+const selectedDay = ref('all') // default to show all tasks
 
 const dayMap = {
   0: 'sun',
@@ -25,10 +25,9 @@ const dayMap = {
 
 const today = dayMap[new Date().getDay()]
 
-// Initialize with today's day selected
 selectedDay.value = today
 
-// Filter tasks based on selected day
+// filter tasks based on selected day
 const tasks = computed(() => {
   if (selectedDay.value === 'all') {
     return allTasks.value

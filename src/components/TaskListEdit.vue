@@ -1,12 +1,33 @@
 <script setup>
 import TaskSingleEdit from './TaskSingleEdit.vue'
 import { useTaskStore } from '@/stores/taskStore'
-import taskData from '@/tasks.json'
 
 import { ref, computed } from 'vue'
 
 const taskStore = useTaskStore()
-const tasks = computed(() => taskStore.tasks)
+const allTasks = computed(() => taskStore.tasks)
+
+const selectedDay = ref('all')
+
+// filter tasks based on selected day
+const tasks = computed(() => {
+  if (selectedDay.value === 'all') {
+    return allTasks.value
+  } else {
+    return allTasks.value.filter((task) => task.repeat && task.repeat.includes(selectedDay.value))
+  }
+})
+
+const days = [
+  { value: 'all', label: 'All' },
+  { value: 'mon', label: 'Monday' },
+  { value: 'tue', label: 'Tuesday' },
+  { value: 'wed', label: 'Wednesday' },
+  { value: 'thu', label: 'Thursday' },
+  { value: 'fri', label: 'Friday' },
+  { value: 'sat', label: 'Saturday' },
+  { value: 'sun', label: 'Sunday' },
+]
 
 //drag and drop
 const draggedItem = ref(null)
@@ -22,23 +43,23 @@ const onDragOver = (event) => {
 const onDrop = (targetTask) => {
   if (!draggedItem.value || draggedItem.value.id === targetTask.id) return
 
-  // Create a copy of the current tasks
+  // create a copy of the current tasks
   const tasksArray = [...taskStore.tasks]
 
-  // Find the indices
+  // find the indices
   const draggedIndex = tasksArray.findIndex((t) => t.id === draggedItem.value.id)
   const targetIndex = tasksArray.findIndex((t) => t.id === targetTask.id)
 
-  // Remove the dragged item
+  // remove the dragged item
   const [removedItem] = tasksArray.splice(draggedIndex, 1)
 
-  // Insert at the new position
+  // insert at the new position
   tasksArray.splice(targetIndex, 0, removedItem)
 
-  // Update store
+  // update store
   taskStore.updateTaskOrder(tasksArray)
 
-  // Reset dragged item
+  // reset dragged item
   draggedItem.value = null
 }
 
@@ -66,6 +87,22 @@ const addNewTask = () => {
         >
           Add Task
         </button>
+        <!-- Day of week filter bar -->
+        <div class="flex justify-between bg-gray-100 rounded-lg p-1">
+          <button
+            v-for="day in days"
+            :key="day.value"
+            @click="selectedDay = day.value"
+            :class="[
+              'px-3 py-2 rounded-md text-sm font-medium transition-colors',
+              selectedDay === day.value
+                ? 'bg-white shadow text-blue-600'
+                : 'text-gray-700 hover:bg-gray-200',
+            ]"
+          >
+            {{ day.value === 'all' ? 'All' : day.label.slice(0, 3) }}
+          </button>
+        </div>
         <TaskSingleEdit
           v-for="task in tasks"
           :key="task.id"
