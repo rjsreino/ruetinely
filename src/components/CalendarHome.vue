@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useTaskStore } from '@/stores/taskStore'
+
+const taskStore = useTaskStore()
 
 const view = ref('weekly')
 const focusedDate = ref(new Date())
@@ -16,7 +19,7 @@ watch(view, (newView) => {
 const attributes = ref([
   {
     highlight: {
-      color: 'purple',
+      color: '',
       fillMode: 'custom',
       class: 'my-custom-highlight',
     },
@@ -32,72 +35,73 @@ const attributes = ref([
   },
   {
     highlight: {
-      color: 'red',
+      color: '',
       fillMode: 'custom',
       class: 'my-current-day-highlight',
     },
     dates: new Date(),
   },
+  {
+    highlight: {
+      color: 'purple',
+      fillMode: 'custom',
+      contentClass: 'text-purple-600',
+    },
+    dates: new Date(),
+  },
 ])
-const likertValue = ref(4)
-const getHexOpacity = (value) => {
-  const opacityMap = {
-    0: '00',
-    1: '0a', // ~4% opacity
-    2: '1a', // ~10% opacity
-    3: '33', // ~20% opacity
-    4: '4d', // ~30% opacity
-    5: '66', // ~40% opacity
-    6: '80', // ~50% opacity
-    7: '99', // ~60% opacity
-    8: 'b3', // ~70% opacity
-    9: 'cc', // ~80% opacity
-    10: 'ee', // ~93% opacity
-  }
-  return opacityMap[value] || '80' // Default to 50% if invalid value
-}
+
+// watch for changes in the selected day from the store
+watch(
+  () => taskStore.selectedDay,
+  (newDay) => {
+    console.log(`Selected day changed to ${newDay}, updating calendar view`)
+  },
+)
+// computed color value using the hexCalendarValue from the store
 const colorValue = computed(() => {
-  return `#0059ff${getHexOpacity(likertValue.value)}`
+  const hexValue =
+    taskStore.hexCalendarValue && taskStore.hexCalendarValue !== '0'
+      ? taskStore.hexCalendarValue
+      : '00'
+  return `#0059ff${hexValue}`
+})
+const textColorClass = computed(() => {
+  const hex = colorValue.value.slice(-2) // get last two hex digits (alpha)
+  const alpha = parseInt(hex, 16)
+  return alpha >= 102 ? 'text-white' : 'text-black' // 102 ≈ 40% of 255
 })
 watch(colorValue, (newColor) => {
   document.documentElement.style.setProperty('--number', newColor)
 })
-
-// Initialize the CSS variable
 document.documentElement.style.setProperty('--number', colorValue.value)
 </script>
+
 <style>
 :root {
-  --number: #0059ff33;
+  --number: #0059ffff;
 }
-/* Custom highlight style with precise opacity control */
+/* custom highlight style with precise opacity control */
 .my-custom-highlight {
   background-color: var(--number) !important;
   border-radius: 5px;
+  color: purple;
 }
 .my-current-day-highlight {
-  border: 2px solid #0059ff !important;
-
+  border: 2px solid #0059ffff !important;
   border-radius: 5px;
+  color: purple;
 }
 </style>
+
 <template>
   <select v-model="view" class="p-1.5 border-2 rounded-lg shadow-inner focus:outline-none">
     <option value="weekly">Weekly</option>
     <option value="monthly">Monthly</option>
   </select>
-  <div class="likert-scale">
-    <button
-      v-for="n in 10"
-      :key="n"
-      class="likert-button"
-      :class="{ active: likertValue === n }"
-      @click="likertValue = n"
-    >
-      {{ n }}
-    </button>
-  </div>
-  <p>Current opacity: {{ getHexOpacity(likertValue) }} (hex)</p>
+  <p :class="textColorClass">Current opacity: {{ colorValue }}</p>
+  <p>Selected day: {{ taskStore.selectedDay }}</p>
+  <p>Hex value from store: {{ taskStore.hexCalendarValue }}</p>
   <VCalendar
     expanded
     :key="calendarKey"
