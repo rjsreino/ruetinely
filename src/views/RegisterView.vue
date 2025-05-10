@@ -1,18 +1,49 @@
 <script setup>
 import { ref } from 'vue'
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const name = ref('')
 const email = ref('')
 const password = ref('')
 
 const handleRegister = () => {
-  console.log('Registering with:', name.value, email.value, password.value)
-  // Add Firebase registration logic here
+  const auth = getAuth()
+  createUserWithEmailAndPassword(auth, email.value, password.value)
+    .then((data) => {
+      console.log('Registered Successfully!')
+
+      console.log(auth.currentUser)
+      // Redirect to login page
+      router.push('/')
+    })
+    .catch((error) => {
+      console.error('Error registering user:', error.code, error.message)
+    })
+}
+
+const signInWithGoogle = () => {
+  const provider = new GoogleAuthProvider()
+  signInWithPopup(getAuth(), provider)
+    .then((result) => {
+      console.log('Google Sign-In Successful!')
+      router.push('/')
+    })
+    .catch((error) => {
+      console.error('Error registering user:', error.code, error.message)
+    })
 }
 </script>
 <template>
   <div
-    class="w-full mx-auto md:max-w-3xl lg:max-w-3xl flex items-center justify-center min-h-screen bg-gradient-to-t from-gray-300 to-slate-500"
+    class="w-full mx-auto md:max-w-3xl lg:max-w-3xl flex items-center justify-center min-h-screen bg-gradient-to-t from-gray-200 to-slate-400"
   >
     <div class="w-full max-w-md p-8 bg-gradient-to-b from-white to-slate-200 rounded-xl shadow-lg">
       <h2 class="text-2xl font-bold text-center text-gray-800">Register</h2>
@@ -51,10 +82,21 @@ const handleRegister = () => {
           />
         </div>
         <button
+          @click="handleRegister"
           type="submit"
-          class="w-full px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          class="w-full px-4 py-2 text-white bg-blue-500 rounded-full transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
-          Register
+          <span class="font-medium">Register</span>
+        </button>
+        <button
+          @click="signInWithGoogle"
+          type="button"
+          class="w-full px-4 py-2 mt-4 text-black bg-white border-2 border-black rounded-full transition-all duration-300 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <div class="flex items-center justify-center">
+            <img src="@/assets/google-icon-logo.svg" alt="Google Logo" class="w-5 h-5" />
+            <span class="ml-2 font-medium">Continue with Google</span>
+          </div>
         </button>
       </form>
       <p class="mt-4 text-sm text-center text-gray-600">

@@ -8,7 +8,7 @@ const isActiveLink = (routePath) => {
 </script>
 <template>
   <nav
-    class="fixed bottom-8 left-0 right-0 z-50 bg-gradient-to-r from-gray-300 to-slate-500 drop-shadow-lg rounded-3xl mx-auto max-w-max"
+    class="fixed bottom-8 left-0 right-0 z-50 bg-gradient-to-b from-gray-100 to-slate-300 shadow-lg rounded-3xl mx-auto max-w-max"
   >
     <div class="mx-auto px-6 py-1">
       <div class="flex h-20 items-center justify-between">
@@ -25,8 +25,8 @@ const isActiveLink = (routePath) => {
                 to="/"
                 :class="[
                   isActiveLink('/')
-                    ? 'text-black drop-shadow-4xl scale-125'
-                    : 'hover:drop-shadow-2xl text-white drop-shadow-3xl',
+                    ? 'text-blue-700 drop-shadow-4xl scale-110'
+                    : 'hover:drop-shadow-2xl text-slate-700 drop-shadow-3xl',
                   'transition delay-50 duration-300 ease-in-out px-3 py-2',
                 ]"
               >
@@ -36,19 +36,19 @@ const isActiveLink = (routePath) => {
                 to="/tasks"
                 :class="[
                   isActiveLink('/tasks')
-                    ? 'text-black drop-shadow-4xl scale-125'
-                    : 'hover:drop-shadow-2xl text-white drop-shadow-3xl',
+                    ? 'text-blue-700 drop-shadow-4xl scale-110'
+                    : 'hover:drop-shadow-2xl text-slate-700 drop-shadow-3xl',
                   'transition delay-50 duration-300 ease-in-out px-3 py-2',
                 ]"
               >
                 <NavBarItem primeIcon="list-check" text="Tasks" />
               </RouterLink>
               <RouterLink
-                to="/jobs/add"
+                to="/user"
                 :class="[
-                  isActiveLink('/jobs/add')
-                    ? 'text-black drop-shadow-4xl scale-125'
-                    : 'hover:drop-shadow-2xl text-white drop-shadow-3xl',
+                  isActiveLink('/user')
+                    ? 'text-blue-700 drop-shadow-4xl scale-110'
+                    : 'hover:drop-shadow-2xl text-slate-700 drop-shadow-3xl',
                   'transition delay-50 duration-300 ease-in-out px-3 py-2',
                 ]"
               >
