@@ -34,15 +34,6 @@ if (taskStore.selectedDay === 'mon') {
   <section class="py-8">
     <div class="flex justify-center container-xl">
       <div class="grid grid-cols-1 gap-6">
-        <p class="font-semibold">
-          Total priority value of completed tasks: {{ taskStore.completedPrioritySum }}
-        </p>
-        <p class="font-semibold">
-          Available priority on {{ taskStore.selectedDay }}:
-          {{ taskStore.dailyPrioritySums[taskStore.selectedDay] ?? 0 }}
-        </p>
-        <p class="font-semibold">Ratio: {{ taskStore.calendarPriorityDisplayValue }}</p>
-        <p class="font-semibold">Hex Code: {{ taskStore.hexCalendarValue }}</p>
         <h2 class="font-bold text-2xl">Tasks:</h2>
         <!-- Day of week tabs alternative UI -->
         <div class="flex justify-between bg-gray-100 rounded-lg p-1 shadow-md">
