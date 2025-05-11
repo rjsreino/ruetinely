@@ -2,19 +2,56 @@
 import { ref, onMounted } from 'vue'
 import { getAuth, updateProfile, signOut } from 'firebase/auth'
 import { useRouter } from 'vue-router'
+import { getFirestore, doc, getDoc } from 'firebase/firestore'
 
 const router = useRouter()
 const auth = getAuth()
+const db = getFirestore()
 
 const user = ref(auth.currentUser)
-const name = ref(user.value?.displayName || '')
+const name = ref(user.value?.displayName || 'Loading...')
 const email = ref(user.value?.email || '')
 const isEditingName = ref(false)
+const isLoading = ref(true)
 const errMsg = ref('')
+
+const fetchUserName = async () => {
+  if (!auth.currentUser) {
+    console.log('User not authenticated, redirecting to login...')
+    router.push('/login')
+    return
+  }
+
+  if (auth.currentUser.displayName) {
+    name.value = auth.currentUser.displayName
+    isLoading.value = false
+    return
+  }
+
+  try {
+    console.log('Fetching user data for UID:', auth.currentUser.uid)
+    const userDocRef = doc(db, 'users', auth.currentUser.uid)
+    const userDoc = await getDoc(userDocRef)
+
+    if (userDoc.exists()) {
+      name.value = userDoc.data().name || ''
+    } else {
+      console.error('User document does not exist.')
+      errMsg.value = 'User data not found.'
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error.message)
+    errMsg.value = 'Failed to fetch user data. Please try again later.'
+  } finally {
+    isLoading.value = false
+  }
+}
 
 onMounted(() => {
   if (!auth.currentUser) {
     router.push('/login')
+  } else {
+    fetchUserName()
   }
 })
 
@@ -56,7 +93,6 @@ const handleLogout = () => {
   >
     <div class="w-full max-w-md p-8 bg-gradient-to-b from-white to-slate-200 rounded-xl shadow-lg">
       <h2 class="text-2xl font-bold text-center text-gray-800">User Profile</h2>
-
       <!-- User Info -->
       <div class="mt-6">
         <div class="mb-4">

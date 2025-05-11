@@ -67,7 +67,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       if (to.name === 'tasks') {
         alert('You must be logged in to access tasks!')
-        next('/') // Redirect to home if accessing tasks without login
+        next('/user') // Redirect to home if accessing tasks without login
       } else {
         next('/login') // Redirect to login for other protected routes
       }
