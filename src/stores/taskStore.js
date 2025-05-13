@@ -191,6 +191,24 @@ export const useTaskStore = defineStore('tasks', {
       }
       this.tasks.push(task)
     },
+    // Helper method to update a task in Firestore
+    async updateTaskInFirestore(task) {
+      const userId = this.getCurrentUserId()
+      if (!userId) return
+
+      const db = getFirestore()
+      const taskRef = doc(db, 'users', userId, 'tasks', task.id)
+
+      try {
+        const taskData = this.prepareTaskForFirestore(task)
+        // Remove the id field as it's already in the document reference
+        delete taskData.id
+        await updateDoc(taskRef, taskData)
+        console.log('Task updated in Firestore:', task.id)
+      } catch (error) {
+        console.error('Error updating task in Firestore:', error.message)
+      }
+    },
     // Helper method to add a task to Firestore
     async addTaskToFirestore(task) {
       const userId = this.getCurrentUserId()
