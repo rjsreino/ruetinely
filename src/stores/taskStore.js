@@ -1,5 +1,14 @@
 import { defineStore } from 'pinia'
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  addDoc,
+} from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 export const useTaskStore = defineStore('tasks', {
@@ -76,18 +85,30 @@ export const useTaskStore = defineStore('tasks', {
     },
   },
   actions: {
-    // Fetch tasks from Firestore
-    async fetchTasks() {
+    getCurrentUserId() {
       const auth = getAuth()
       const user = auth.currentUser
-
       if (!user) {
         console.error('User not authenticated')
-        return
+        return null
       }
+      return user.uid
+    },
+
+    // Convert task for Firestore (arrays need special handling)
+    prepareTaskForFirestore(task) {
+      return {
+        ...task,
+        days: task.repeat.join(','), // Convert repeat array to comma-separated string
+      }
+    },
+    // Fetch tasks from Firestore
+    async fetchTasks() {
+      const userId = this.getCurrentUserId()
+      if (!userId) return
 
       const db = getFirestore()
-      const tasksRef = collection(db, 'users', user.uid, 'tasks')
+      const tasksRef = collection(db, 'users', userId, 'tasks')
 
       try {
         const tasksSnapshot = await getDocs(tasksRef)
@@ -120,45 +141,101 @@ export const useTaskStore = defineStore('tasks', {
     setSelectedDay(day) {
       this.selectedDay = day
     },
-    updateTaskOrder(reorderedTasks) {
+    async updateTaskOrder(reorderedTasks) {
       this.tasks = reorderedTasks
-      // (implementation) persist changes to a backend here
     },
-    toggleTaskCompleted(taskId) {
+    async toggleTaskCompleted(taskId) {
       const task = this.tasks.find((t) => t.id === taskId)
       if (task) {
         task.completed = !task.completed
+        await this.updateTaskInFirestore(task)
       }
     },
-    updateTaskPriority(taskId, priority) {
+    async updateTaskPriority(taskId, priority) {
       const task = this.tasks.find((t) => t.id === taskId)
       if (task) {
         task.priority = priority
+        await this.updateTaskInFirestore(task)
       }
     },
-    updateTaskName(taskId, name) {
+    async updateTaskName(taskId, name) {
       const task = this.tasks.find((t) => t.id === taskId)
       if (task) {
         task.name = name
+        await this.updateTaskInFirestore(task)
       }
     },
-    updateTaskRepeat(taskId, repeat) {
+    async updateTaskRepeat(taskId, repeat) {
       const task = this.tasks.find((t) => t.id === taskId)
       if (task) {
         task.repeat = repeat
+        await this.updateTaskInFirestore(task)
       }
     },
-    updateTaskTime(taskId, time) {
+    async updateTaskTime(taskId, time) {
       const task = this.tasks.find((t) => t.id === taskId)
       if (task) {
         task.time = time
+        await this.updateTaskInFirestore(task)
       }
     },
-    deleteTask(taskId) {
+    async deleteTask(taskId) {
+      await this.deleteTaskFromFirestore(taskId)
       this.tasks = this.tasks.filter((t) => t.id !== taskId)
     },
-    addTask(task) {
+    async addTask(task) {
+      const newTaskId = await this.addTaskToFirestore(task)
+      if (newTaskId) {
+        // Update the task ID if we got one from Firestore
+        task.id = newTaskId
+      }
       this.tasks.push(task)
+    },
+    // Helper method to add a task to Firestore
+    async addTaskToFirestore(task) {
+      const userId = this.getCurrentUserId()
+      if (!userId) return null
+
+      const db = getFirestore()
+      const tasksRef = collection(db, 'users', userId, 'tasks')
+
+      try {
+        const taskData = this.prepareTaskForFirestore(task)
+        // Check if task already has an ID (custom ID case)
+        if (task.id && typeof task.id === 'string' && task.id.trim() !== '') {
+          // Use setDoc with the provided ID
+          const taskDocRef = doc(db, 'users', userId, 'tasks', task.id)
+          delete taskData.id // Remove id from the data object
+          await setDoc(taskDocRef, taskData)
+          console.log('Task added to Firestore with provided ID:', task.id)
+          return task.id
+        } else {
+          // Let Firestore generate an ID
+          delete taskData.id // Remove any temporary id
+          const docRef = await addDoc(tasksRef, taskData)
+          console.log('Task added to Firestore with generated ID:', docRef.id)
+          return docRef.id
+        }
+      } catch (error) {
+        console.error('Error adding task to Firestore:', error.message)
+        return null
+      }
+    },
+
+    // Helper method to delete a task from Firestore
+    async deleteTaskFromFirestore(taskId) {
+      const userId = this.getCurrentUserId()
+      if (!userId) return
+
+      const db = getFirestore()
+      const taskRef = doc(db, 'users', userId, 'tasks', taskId)
+
+      try {
+        await deleteDoc(taskRef)
+        console.log('Task deleted from Firestore:', taskId)
+      } catch (error) {
+        console.error('Error deleting task from Firestore:', error.message)
+      }
     },
   },
 })
