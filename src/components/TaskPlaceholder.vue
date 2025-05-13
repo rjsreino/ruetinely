@@ -1,13 +1,17 @@
-<script setup></script>
+<script setup>
+import { RouterLink } from 'vue-router'
+</script>
 <template>
-  <div
-    class="w-96 p-4 bg-gradient-to-l from-slate-300 to-gray-200 rounded-lg shadow-lg sm:max-w-2xl md:max-w-2xl lg:max-w-2xl"
-  >
-    <div class="flex items-center justify-between w-full">
-      <!--left side-->
-      <div>
-        <label class="font-bold">Add task here</label>
+  <RouterLink to="/tasks">
+    <div
+      class="w-96 p-4 bg-transparent border-2 border-dotted border-gray-400 rounded-lg shadow-inner hover:bg-slate-100 transition duration-300 ease-in-out cursor-pointer"
+    >
+      <div class="flex items-center justify-between w-full">
+        <!--left side-->
+        <div>
+          <label class="text-gray-400 italic">No tasks today! Click to add task~</label>
+        </div>
       </div>
     </div>
-  </div>
+  </RouterLink>
 </template>

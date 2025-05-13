@@ -10,7 +10,8 @@ import PrimeVue from 'primevue/config'
 
 import App from './App.vue'
 import router from './router'
-
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { useTaskStore } from '@/stores/taskStore'
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
 // TODO: Add SDKs for Firebase products that you want to use
@@ -35,4 +36,17 @@ app.use(VCalendar, {})
 app.use(router)
 app.use(PrimeVue)
 
-app.mount('#app')
+const taskStore = useTaskStore()
+taskStore.initializeTaskStore()
+
+const auth = getAuth()
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log('User is authenticated:', user.uid)
+  } else {
+    console.log('No user is authenticated')
+  }
+  if (!app._container) {
+    app.mount('#app') // Mount the app only once
+  }
+})

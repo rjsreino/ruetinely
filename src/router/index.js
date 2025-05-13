@@ -14,24 +14,19 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+      meta: { requiresAuth: true },
     },
     {
       path: '/tasks',
       name: 'tasks',
       component: TasksView,
-      meta: {
-        requiresAuth: true,
-      },
+      meta: { requiresAuth: true },
     },
     {
       path: '/user',
       name: 'user',
       component: UserView,
-    },
-    {
-      path: '/:catchAll(.*)',
-      name: 'not-found',
-      component: NotFoundView,
+      meta: { requiresAuth: true },
     },
     {
       path: '/login',
@@ -43,34 +38,23 @@ const router = createRouter({
       name: 'register',
       component: RegisterView,
     },
+    {
+      path: '/:catchAll(.*)',
+      name: 'not-found',
+      component: NotFoundView,
+    },
   ],
 })
 
-const getCurrentUser = () => {
-  return new Promise((resolve, reject) => {
-    const removeListener = onAuthStateChanged(
-      getAuth(),
-      (user) => {
-        removeListener
-        resolve(user)
-      },
-      reject,
-    )
-  })
-}
-
 router.beforeEach(async (to, from, next) => {
+  const auth = getAuth()
+  const user = auth.currentUser
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const user = getAuth().currentUser
-    if (await getCurrentUser()) {
+    if (user) {
       next()
     } else {
-      if (to.name === 'tasks') {
-        alert('You must be logged in to access tasks!')
-        next('/user') // Redirect to home if accessing tasks without login
-      } else {
-        next('/login') // Redirect to login for other protected routes
-      }
+      console.error('User not authenticated, redirecting to login...')
+      next('/login')
     }
   } else {
     next()

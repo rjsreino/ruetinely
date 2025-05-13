@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import taskData from '@/tasks.json'
+import { getFirestore, collection, getDocs } from 'firebase/firestore'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 export const useTaskStore = defineStore('tasks', {
   state: () => ({
-    tasks: taskData,
+    tasks: [],
     selectedDay: 'mon',
   }),
   getters: {
@@ -76,6 +76,47 @@ export const useTaskStore = defineStore('tasks', {
     },
   },
   actions: {
+    // Fetch tasks from Firestore
+    async fetchTasks() {
+      const auth = getAuth()
+      const user = auth.currentUser
+
+      if (!user) {
+        console.error('User not authenticated')
+        return
+      }
+
+      const db = getFirestore()
+      const tasksRef = collection(db, 'users', user.uid, 'tasks')
+
+      try {
+        const tasksSnapshot = await getDocs(tasksRef)
+        this.tasks = tasksSnapshot.docs.map((doc) => {
+          const data = doc.data()
+          return {
+            id: doc.id,
+            ...data,
+            repeat: data.days ? data.days.split(',') : [], // Convert days string to array
+          }
+        })
+        console.log('Fetched tasks from Firestore:', this.tasks)
+      } catch (error) {
+        console.error('Error fetching tasks from Firestore:', error.message)
+      }
+    },
+    // automatically fetch tasks when a user logs in
+    initializeTaskStore() {
+      const auth = getAuth()
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log('User logged in:', user.uid)
+          this.fetchTasks() // fetch tasks when a user logs in
+        } else {
+          console.log('User logged out')
+          this.tasks = [] // clear tasks when the user logs out
+        }
+      })
+    },
     setSelectedDay(day) {
       this.selectedDay = day
     },
@@ -95,10 +136,10 @@ export const useTaskStore = defineStore('tasks', {
         task.priority = priority
       }
     },
-    updateTaskTitle(taskId, title) {
+    updateTaskName(taskId, name) {
       const task = this.tasks.find((t) => t.id === taskId)
       if (task) {
-        task.title = title
+        task.name = name
       }
     },
     updateTaskRepeat(taskId, repeat) {

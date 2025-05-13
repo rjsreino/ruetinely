@@ -24,7 +24,7 @@ const getPriorityClasses = (priority) => {
 
 // state for editing
 const isEditing = ref(false)
-const editedTitle = ref(props.task.title)
+const editedName = ref(props.task.name)
 const editedPriority = ref(props.task.priority)
 const editedRepeat = ref(
   Array.isArray(props.task.repeat) ? [...props.task.repeat] : [props.task.repeat],
@@ -38,15 +38,15 @@ const isDraggedOver = ref(false)
 
 const startEditing = () => {
   isEditing.value = true
-  editedTitle.value = props.task.title
+  editedName.value = props.task.name
   editedPriority.value = props.task.priority
   editedRepeat.value = props.task.repeat
   editedTime.value = props.task.time
 }
 
 const saveChanges = () => {
-  if (editedTitle.value.trim()) {
-    taskStore.updateTaskTitle(props.task.id, editedTitle.value)
+  if (editedName.value.trim()) {
+    taskStore.updateTaskName(props.task.id, editedName.value)
     taskStore.updateTaskPriority(props.task.id, editedPriority.value)
     taskStore.updateTaskRepeat(props.task.id, editedRepeat.value)
     taskStore.updateTaskTime(props.task.id, editedTime.value)
@@ -91,7 +91,7 @@ const handleDragLeave = () => {
           <label
             class="font-bold mr-3 truncate whitespace-nowrap overflow-hidden max-w-[12rem] sm:max-w-[16rem] md:max-w-[20rem]"
           >
-            {{ task.title }}
+            {{ task.name }}
           </label>
           <div
             class="px-3 py-2 bg-white rounded-full border-2 text-sm flex-shrink-0"
@@ -123,7 +123,7 @@ const handleDragLeave = () => {
     <!-- Edit View -->
     <div v-else class="flex flex-col space-y-4">
       <input
-        v-model="editedTitle"
+        v-model="editedName"
         type="text"
         minlength="1"
         maxlength="32"

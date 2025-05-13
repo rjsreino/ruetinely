@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useTaskStore } from '@/stores/taskStore'
 
 const taskStore = useTaskStore()
@@ -7,6 +7,10 @@ const taskStore = useTaskStore()
 const view = ref('weekly')
 const focusedDate = ref(new Date())
 const calendarKey = ref(0)
+
+onMounted(() => {
+  taskStore.fetchTasks()
+})
 
 const attributes = computed(() => [
   {

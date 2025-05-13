@@ -1,8 +1,7 @@
 <script setup>
 import CheckBox from './CheckBox.vue'
-import { ref, onMounted } from 'vue'
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
+import { ref, computed, onMounted } from 'vue'
+import { useTaskStore } from '@/stores/taskStore'
 
 const props = defineProps({
   taskId: {
@@ -11,74 +10,24 @@ const props = defineProps({
   },
 })
 
-const db = getFirestore()
-const auth = getAuth()
+const taskStore = useTaskStore()
 
-const task = ref(null)
-const isLoading = ref(true)
-const errMsg = ref('')
-
-const fetchTask = async () => {
-  isLoading.value = true
-  try {
-    const user = auth.currentUser
-    if (!user) {
-      console.error('User not authenticated')
-      errMsg.value = 'User not authenticated'
-      return
-    }
-    console.log('Fetching task for user:', user.uid, 'and task ID:', props.taskId)
-    const taskDocRef = doc(db, 'users', user.uid, 'tasks', props.taskId)
-    const taskDoc = await getDoc(taskDocRef)
-
-    if (taskDoc.exists()) {
-      console.log('Fetched task data:', taskDoc.data())
-      task.value = { id: taskDoc.id, ...taskDoc.data() }
-    } else {
-      console.error('Task document does not exist.')
-      errMsg.value = 'Task not found.'
-    }
-  } catch (error) {
-    console.error('Error fetching task:', error.message)
-    errMsg.value = 'Failed to fetch task. Please try again later.'
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const toggleCompleted = async () => {
-  try {
-    const user = auth.currentUser
-    if (!user || !task.value) {
-      console.error('User not authenticated or task is null')
-      return
-    }
-
-    const taskDocRef = doc(db, 'users', user.uid, 'tasks', task.value.id)
-    await updateDoc(taskDocRef, { completed: !task.value.completed })
-    task.value.completed = !task.value.completed // Update locally
-  } catch (error) {
-    console.error('Error updating task completion:', error.message)
-  }
-}
-
-onMounted(() => {
-  console.log('TaskSingle mounted with taskId:', props.taskId)
-  fetchTask()
+const task = computed(() => {
+  return taskStore.tasks.find((t) => t.id === props.taskId)
 })
+
+const toggleCompleted = () => {
+  if (task.value) {
+    taskStore.toggleTaskCompleted(task.value.id)
+  }
+}
 </script>
 <template>
   <div
-    v-if="isLoading"
+    v-if="!task"
     class="w-96 p-4 bg-gradient-to-l from-slate-300 to-gray-200 rounded-lg shadow-lg sm:max-w-2xl md:max-w-2xl lg:max-w-2xl text-center text-gray-500"
   >
     Loading task...
-  </div>
-  <div
-    v-else-if="errMsg"
-    class="w-96 p-4 bg-gradient-to-l from-slate-300 to-gray-200 rounded-lg shadow-lg sm:max-w-2xl md:max-w-2xl lg:max-w-2xl text-center text-red-500"
-  >
-    {{ errMsg }}
   </div>
   <div
     v-else-if="task"
@@ -109,6 +58,7 @@ onMounted(() => {
           'border-red-400 text-red-500 font-bold': task.priority === 'urgent',
         }"
       >
+        <i class="pi pi-flag" :class="task.priority"></i>
         {{ task.priority }}
       </div>
       <CheckBox

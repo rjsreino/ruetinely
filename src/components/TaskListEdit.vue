@@ -1,6 +1,8 @@
 <script setup>
 import TaskSingleEdit from './TaskSingleEdit.vue'
+import AddTaskForm from './AddTaskForm.vue'
 import { useTaskStore } from '@/stores/taskStore'
+import DayPick from './DayPick.vue'
 
 import { ref, computed } from 'vue'
 
@@ -62,18 +64,13 @@ const onDrop = (targetTask) => {
   // reset dragged item
   draggedItem.value = null
 }
+const isCreatingTask = ref(false)
 
 const addNewTask = () => {
-  const newTask = {
-    id: Date.now().toString(),
-    title: 'New Task',
-    priority: 'no priority',
-    repeat: [],
-    time: '00.00',
-    completed: false,
-  }
-  console.log(newTask)
-  taskStore.addTask(newTask)
+  isCreatingTask.value = true
+}
+const closeAddTaskForm = () => {
+  isCreatingTask.value = false
 }
 </script>
 <template>
@@ -82,11 +79,13 @@ const addNewTask = () => {
       <div class="grid grid-cols-1 gap-6">
         <h2 class="font-bold text-2xl">Tasks:</h2>
         <button
+          v-if="!isCreatingTask"
           @click="addNewTask"
           class="w-96 px-4 py-4 bg-gradient-to-l from-slate-500 to-gray-700 text-white rounded-lg hover:from-slate-600 hover:to-gray-800 shadow-md"
         >
           Add Task
         </button>
+        <AddTaskForm v-if="isCreatingTask" @close="closeAddTaskForm" />
         <!-- Day of week filter bar -->
         <div class="flex justify-between bg-gray-100 rounded-lg p-1">
           <button
