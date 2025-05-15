@@ -45,11 +45,17 @@ const router = createRouter({
     },
   ],
 })
-
+function waitForAuth() {
+  return new Promise((resolve) => {
+    const unsubscribe = getAuth().onAuthStateChanged((user) => {
+      unsubscribe()
+      resolve(user)
+    })
+  })
+}
 router.beforeEach(async (to, from, next) => {
-  const auth = getAuth()
-  const user = auth.currentUser
   if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const user = await waitForAuth()
     if (user) {
       next()
     } else {
