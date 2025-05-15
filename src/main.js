@@ -45,10 +45,6 @@ app.use(Toast, {
   newestOnTop: true,
 })
 
-const taskStore = useTaskStore()
-taskStore.initializeTaskStore()
-taskStore.initializeUser()
-
 const auth = getAuth()
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -56,6 +52,10 @@ onAuthStateChanged(auth, (user) => {
   } else {
     console.log('No user is authenticated')
   }
+
+  const taskStore = useTaskStore()
+  taskStore.initializeTaskStore()
+  taskStore.initializeUser()
   if (!app._container) {
     app.mount('#app') // Mount the app only once
   }
