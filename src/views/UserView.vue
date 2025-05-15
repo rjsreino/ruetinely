@@ -1,82 +1,46 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { getAuth, updateProfile, signOut } from 'firebase/auth'
+import { ref, watch } from 'vue'
+import { signOut } from 'firebase/auth'
 import { useRouter } from 'vue-router'
-import { getFirestore, doc, getDoc } from 'firebase/firestore'
+import { useTaskStore } from '@/stores/taskStore'
 
 const router = useRouter()
-const auth = getAuth()
-const db = getFirestore()
+const taskStore = useTaskStore()
 
-const user = ref(auth.currentUser)
-const name = ref(user.value?.displayName || 'Loading...')
-const email = ref(user.value?.email || '')
+const name = ref(taskStore.userName || '')
+const email = ref(taskStore.userEmail || '')
 const isEditingName = ref(false)
 const isLoading = ref(true)
 const errMsg = ref('')
 
-const fetchUserName = async () => {
-  if (!auth.currentUser) {
-    console.log('User not authenticated, redirecting to login...')
-    router.push('/login')
-    return
-  }
-
-  if (auth.currentUser.displayName) {
-    name.value = auth.currentUser.displayName
-    isLoading.value = false
-    return
-  }
-
-  try {
-    console.log('Fetching user data for UID:', auth.currentUser.uid)
-    const userDocRef = doc(db, 'users', auth.currentUser.uid)
-    const userDoc = await getDoc(userDocRef)
-
-    if (userDoc.exists()) {
-      name.value = userDoc.data().name || ''
-    } else {
-      console.error('User document does not exist.')
-      errMsg.value = 'User data not found.'
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error.message)
-    errMsg.value = 'Failed to fetch user data. Please try again later.'
-  } finally {
-    isLoading.value = false
-  }
-}
-
-onMounted(() => {
-  if (!auth.currentUser) {
-    router.push('/login')
-  } else {
-    fetchUserName()
-  }
-})
+watch(
+  () => taskStore.userName,
+  (val) => (name.value = val),
+)
+watch(
+  () => taskStore.userEmail,
+  (val) => (email.value = val),
+)
 
 // Handle name update
-const handleNameUpdate = () => {
+const handleNameUpdate = async () => {
   if (!name.value.trim()) {
     errMsg.value = 'Name cannot be empty.'
     return
   }
-
-  updateProfile(auth.currentUser, { displayName: name.value })
-    .then(() => {
-      user.value = auth.currentUser
-      isEditingName.value = false
-      errMsg.value = ''
-      console.log('Name updated successfully!')
-    })
-    .catch((error) => {
-      console.error('Error updating name:', error.message)
-      errMsg.value = 'Failed to update name. Please try again later.'
-    })
+  isLoading.value = true
+  const success = await taskStore.updateUserName(name.value)
+  isLoading.value = false
+  if (success) {
+    isEditingName.value = false
+    errMsg.value = ''
+  } else {
+    errMsg.value = 'Failed to update name. Please try again later.'
+  }
 }
 
 const handleLogout = () => {
-  signOut(auth)
+  signOut(taskStore.user?.auth)
     .then(() => {
       console.log('Logged out successfully!')
       router.push('/login')
@@ -115,6 +79,7 @@ const handleLogout = () => {
               <button
                 @click="handleNameUpdate"
                 class="px-4 py-2 text-white bg-blue-500 rounded-full transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                :disabled="isLoading"
               >
                 Save
               </button>

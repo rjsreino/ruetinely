@@ -1,5 +1,4 @@
 import './assets/index.css'
-import 'primeicons/primeicons.css'
 import VCalendar from 'v-calendar'
 import 'v-calendar/style.css'
 
@@ -7,6 +6,10 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import PrimeVue from 'primevue/config'
+import 'primeicons/primeicons.css'
+
+import Toast, { POSITION } from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 
 import App from './App.vue'
 import router from './router'
@@ -35,9 +38,16 @@ app.use(createPinia())
 app.use(VCalendar, {})
 app.use(router)
 app.use(PrimeVue)
+app.use(Toast, {
+  position: POSITION.TOP_CENTER,
+  transition: 'Vue-Toastification__fade',
+  maxToasts: 1,
+  newestOnTop: true,
+})
 
 const taskStore = useTaskStore()
 taskStore.initializeTaskStore()
+taskStore.initializeUser()
 
 const auth = getAuth()
 onAuthStateChanged(auth, (user) => {

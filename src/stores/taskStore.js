@@ -8,6 +8,7 @@ import {
   updateDoc,
   deleteDoc,
   addDoc,
+  getDoc,
 } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
@@ -15,6 +16,10 @@ export const useTaskStore = defineStore('tasks', {
   state: () => ({
     tasks: [],
     selectedDay: 'mon',
+    initialized: false,
+    user: null,
+    userName: '',
+    userEmail: '',
   }),
   getters: {
     // Filter tasks based on selected day
@@ -85,6 +90,60 @@ export const useTaskStore = defineStore('tasks', {
     },
   },
   actions: {
+    initializeUser() {
+      if (this.initialized) return
+      this.initialized = true
+      const auth = getAuth()
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          this.user = user
+          this.userEmail = user.email
+          // Prefer displayName from auth, fallback to Firestore
+          this.userName = user.displayName || ''
+          if (!this.userName) {
+            await this.fetchUserNameFromFirestore()
+          }
+        } else {
+          this.user = null
+          this.userName = ''
+          this.userEmail = ''
+        }
+      })
+    },
+
+    async fetchUserNameFromFirestore() {
+      const auth = getAuth()
+      const db = getFirestore()
+      if (!auth.currentUser) return
+      try {
+        const userDocRef = doc(db, 'users', auth.currentUser.uid)
+        const userDoc = await getDoc(userDocRef)
+        if (userDoc.exists()) {
+          this.userName = userDoc.data().name || ''
+        }
+      } catch (error) {
+        console.error('Error fetching user name from Firestore:', error.message)
+      }
+    },
+
+    async updateUserName(newName) {
+      const auth = getAuth()
+      const db = getFirestore()
+      if (!auth.currentUser) return false
+      try {
+        // Update Firebase Auth profile
+        await updateProfile(auth.currentUser, { displayName: newName })
+        // Update Firestore user doc
+        const userDocRef = doc(db, 'users', auth.currentUser.uid)
+        await updateDoc(userDocRef, { name: newName })
+        // Update local state
+        this.userName = newName
+        return true
+      } catch (error) {
+        console.error('Error updating user name:', error.message)
+        return false
+      }
+    },
     getCurrentUserId() {
       const auth = getAuth()
       const user = auth.currentUser
